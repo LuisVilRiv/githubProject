@@ -2,6 +2,14 @@
 
 @section('content')
 <div class="container">
+    <h1>Alumnos</h1>
+    <a href="{{ route('alumno.create') }}" class="btn btn-secondary mb-3">Crear Alumno</a>
+    <a href="{{ route('modulo.create') }}" class="btn btn-secondary mb-3">Crear Módulo</a>
+    <a href="{{ route('alumno.index') }}" class="btn btn-secondary mb-3">Ver Alumnos</a>
+    <a href="{{ route('modulo.index') }}" class="btn btn-secondary mb-3">Ver Módulos</a>
+    <hr>
+</div>
+<div class="container">
     <div class="row">
         <div class="col-md-6 mx-auto">
             <form action="{{ route('alumno.update', $alumno) }}" method="post">

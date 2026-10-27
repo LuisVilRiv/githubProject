@@ -3,63 +3,74 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profesor;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ProfesorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        $profesores = Profesor::all();
+
+        return view('profesor.index', compact('profesores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('profesor.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $datos = $request->validate([
+            'nombre' => ['required', 'string', 'min:2', 'max:100'],
+            'apellidos' => ['required', 'string', 'min:3', 'max:130'],
+            'especialidad' => ['required', 'string', 'max:120'],
+            'fecha_alta' => ['required', 'date', 'before_or_equal:today'],
+            'salario' => ['required', 'numeric', 'min:0', 'max:99999999.99', 'decimal:0,2'],
+        ]);
+
+        Profesor::create($datos);
+
+        return redirect()
+            ->route('profesor.index')
+            ->with('success', 'Profesor creado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Profesor $profesor)
+    public function show(Profesor $profesor): View
     {
-        //
+        return view('profesor.show', compact('profesor'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Profesor $profesor)
+    public function edit(Profesor $profesor): View
     {
-        //
+        return view('profesor.edit', compact('profesor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Profesor $profesor)
+    public function update(Request $request, Profesor $profesor): RedirectResponse
     {
-        //
+        $datos = $request->validate([
+            'nombre' => ['required', 'string', 'min:2', 'max:100'],
+            'apellidos' => ['required', 'string', 'min:3', 'max:130'],
+            'especialidad' => ['required', 'string', 'max:120'],
+            'fecha_alta' => ['required', 'date', 'before_or_equal:today'],
+            'salario' => ['required', 'numeric', 'min:0', 'max:99999999.99', 'decimal:0,2'],
+        ]);
+
+        $profesor->update($datos);
+
+        return redirect()
+            ->route('profesor.index')
+            ->with('success', 'Profesor actualizado correctamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Profesor $profesor)
+    public function destroy(Profesor $profesor): RedirectResponse
     {
-        //
+        $profesor->delete();
+
+        return redirect()
+            ->route('profesor.index')
+            ->with('success', 'Profesor eliminado correctamente.');
     }
 }
